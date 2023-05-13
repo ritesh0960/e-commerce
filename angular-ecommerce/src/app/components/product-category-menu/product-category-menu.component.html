@@ -1,0 +1,29 @@
+
+<!-- {{productCategory[1].id}} -->
+<!-- {{productCategory[1].categoryName}} -->
+
+<div class="menu-sidebar-content js-scrollbar1">
+    <nav class="navbar-sidebar">
+      <ul class="list-unstyled navbar-list">
+        <li *ngFor="let tempProductcategory of productCategories">
+          <a routerLink="/category/{{ tempProductcategory.id }}" routerLinkActive="active-link">  {{ tempProductcategory.categoryName }}  </a>
+        
+        </li>
+
+        <!-- <li>
+          <a routerLink="/category/1" routerLinkActive="active-link">Books
+
+          </a>
+        
+        </li>
+
+        <li>
+          <a routerLink="/category/2" routerLinkActive="active-link">Books
+
+          </a>
+        
+        </li> -->
+        
+      </ul>
+    </nav>
+  </div>
