@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { Form, FormBuilder, FormGroup } from '@angular/forms';
+import { Form, FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Observable } from 'rxjs';
+import { Countries } from 'src/app/common/countries';
+import { States } from 'src/app/common/states';
 import { FormService } from 'src/app/services/form.service';
+import { FormValidation } from 'src/app/validation/form-validation';
 
 @Component({
   selector: 'app-checkout',
@@ -15,15 +19,19 @@ export class CheckoutComponent implements OnInit {
       creditCardYears:number[]=[];
       creditCardMonths:number[]=[];
 
+      countries:Countries[]=[];
+       shippingStates:States[]=[];
+       billingStates:States[]=[];
+
       constructor(private formBuilder:FormBuilder,
                   private formService:FormService){};
 
       ngOnInit(): void {
         this.checkoutFormGroup=this.formBuilder.group({
           customer:this.formBuilder.group({
-            firstName:[''],
-            lastName:[''],
-            email:['']
+            firstName: new FormControl('',[Validators.required,Validators.minLength(2),FormValidation.notOnlyWhiteSpaces]),
+            lastName:new FormControl('',[Validators.required,Validators.minLength(2),FormValidation.notOnlyWhiteSpaces]),
+            email:new FormControl('',[Validators.required,Validators.pattern('^[a-z0-9._%+-]+@[a-z0-9.-]+\\.[a-z]{2,4}$'),FormValidation.notOnlyWhiteSpaces])
           }),
           shippingAddress:this.formBuilder.group({
             country:[''],
@@ -68,9 +76,26 @@ export class CheckoutComponent implements OnInit {
         }
        )
 
+
+       this.formService.getCountry().subscribe(
+        data=>{
+          this.countries=data;
+          console.log(JSON.stringify(data));
+        }
+       )
+
+      //  this.formService.getState().subscribe(
+      //   data=>this.states=data
+      //  );
+
       }
 
       onSubmit():void{
+
+       if(this.checkoutFormGroup.invalid){
+        this.checkoutFormGroup.markAllAsTouched();
+       }
+
         console.log("Handling the submit button");
         console.log(this.checkoutFormGroup.get('customer').value);
         console.log(this.checkoutFormGroup.get('shippingAddress').value);
@@ -79,12 +104,22 @@ export class CheckoutComponent implements OnInit {
       
       };
 
+      get firstName(){return this.checkoutFormGroup.get('customer.firstName')};
+      get lastName(){return this.checkoutFormGroup.get('customer.lastName')};
+      get email(){return this.checkoutFormGroup.get('customer.email')};
+
       copyShippingAddressToBillingAddress(event){
         if(event.target.checked){
             this.checkoutFormGroup.controls['billingAddress'].setValue(this.checkoutFormGroup.controls['shippingAddress'].value);
+
+            //to assign shippingAddressState to billingAddressState
+            this.billingStates=this.shippingStates;
         }
         else{
           this.checkoutFormGroup.controls['billingAddress'].reset();
+
+          //msking billingaddressState empty
+          this.billingStates=[];
         }
       }
 
@@ -114,6 +149,36 @@ export class CheckoutComponent implements OnInit {
 
 
       }
+
+      handleStates():void{
+           const shippingAddressFormGroup=this.checkoutFormGroup.get('shippingAddress');
+
+           const selectedCountryCode=shippingAddressFormGroup.value.country.code;
+           console.log("Selected country code" + selectedCountryCode);
+           this.formService.getState(selectedCountryCode).subscribe(
+            data=>{
+              this.shippingStates=data;
+              console.log("retrived state : "+ JSON.stringify(data));
+            }
+           );
+          }
+
+          handleStatesBilling():void{
+            const billingAddressFormGroup=this.checkoutFormGroup.get('billingAddress');
+ 
+            const selectedCountryCode=billingAddressFormGroup.value.country.code;
+            console.log("Selected country code" + selectedCountryCode);
+            this.formService.getState(selectedCountryCode).subscribe(
+             data=>{
+               this.billingStates=data;
+               console.log("retrived state : "+ JSON.stringify(data));
+             }
+            );
+          }
+
+      
+
+
 
       
 
