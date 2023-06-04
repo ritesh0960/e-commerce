@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { CartItem } from '../common/cart-item';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -10,8 +10,21 @@ export class CartService {
 
   cartItem:CartItem[]=[];
   
-  totalPrice:Subject<number> = new Subject<number>();
-  totalQuantity:Subject<number>=new Subject<number>();
+
+  //Subscribe will publish data to only those subscriber which has been instanized before only.
+  // totalPrice:Subject<number> = new Subject<number>();
+  // totalQuantity:Subject<number>=new Subject<number>();
+
+
+ //keeps a buffer of previous events, send previous events to new subscriber
+  // totalPrice:Subject<number> = new ReplaySubject<number>();
+  // totalQuantity:Subject<number>=new ReplaySubject<number>();
+
+
+  //this publish only the latest values to the new subscribers.
+  totalPrice:Subject<number> = new BehaviorSubject<number>(0);
+  totalQuantity:Subject<number>=new BehaviorSubject<number>(0);
+
 
   constructor() { }
 

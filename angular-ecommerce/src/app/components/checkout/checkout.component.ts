@@ -3,6 +3,7 @@ import { Form, FormBuilder, FormControl, FormGroup, Validators } from '@angular/
 import { Observable } from 'rxjs';
 import { Countries } from 'src/app/common/countries';
 import { States } from 'src/app/common/states';
+import { CartService } from 'src/app/services/cart.service';
 import { FormService } from 'src/app/services/form.service';
 import { FormValidation } from 'src/app/validation/form-validation';
 
@@ -24,9 +25,29 @@ export class CheckoutComponent implements OnInit {
        billingStates:States[]=[];
 
       constructor(private formBuilder:FormBuilder,
-                  private formService:FormService){};
+                  private formService:FormService,
+                  private cartService:CartService){};
 
       ngOnInit(): void {
+       
+
+        //subscribing the value of total price and total quantity from cart services
+
+        this.cartService.totalPrice.subscribe(
+
+          
+          data=>this.totalPrice=data
+        
+        );
+
+        console.log(this.totalPrice);
+  
+        this.cartService.totalQuantity.subscribe(
+          data=>this.totalQuantity=data
+        );
+
+
+
         this.checkoutFormGroup=this.formBuilder.group({
           customer:this.formBuilder.group({
             firstName: new FormControl('',[Validators.required,Validators.minLength(2),FormValidation.notOnlyWhiteSpaces]),
