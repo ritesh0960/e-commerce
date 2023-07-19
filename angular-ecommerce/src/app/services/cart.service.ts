@@ -24,9 +24,19 @@ export class CartService {
   //this publish only the latest values to the new subscribers.
   totalPrice:Subject<number> = new BehaviorSubject<number>(0);
   totalQuantity:Subject<number>=new BehaviorSubject<number>(0);
+  // storage:Storage = sessionStorage;
+  storage:Storage = localStorage;
+  constructor() {
+    //read data from the storage
+    let data = JSON.parse(this.storage.getItem('cartItem'));
 
+    if(data!=null){
+      this.cartItem=data;
 
-  constructor() { }
+      //compute total based on the data that is read from storage
+      this.computeCartTotals();
+    }
+   }
 
   addToCart(theCartItem:CartItem){
          //check we already have the item in the cart
@@ -74,7 +84,15 @@ export class CartService {
 
     //log cart value just for debugging purpose
     this.logCartData(totalPriceValue,totalQuantityValue);
+
+    //persist the cart item to handle refresh button
+    this.persistCartItems();
 }
+
+  persistCartItems(){
+    this.storage.setItem('cartItem',JSON.stringify(this.cartItem));
+  }
+
   logCartData(totalPriceValue: number, totalQuantityValue: number) {
     console.log(`contents of the cart`);
     for(let tempCartItem of this.cartItem){

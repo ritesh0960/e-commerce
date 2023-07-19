@@ -1,0 +1,32 @@
+<div class="main-content">
+    <div class="section-content section-content-p30">
+        <div class="container-fluid">
+             <h3>Your Orders</h3>
+            <div *ngIf="orderHistory.length>0">
+                <table class="table table-bordered">
+                    <tr>
+                        <th width="30%">Tracking Number</th>
+                        <th width="20%">Total Quantity</th>
+                        <th width="20%">Total Price</th>
+                        <th width="40%">Order Date</th>
+                    </tr>
+
+                    <tr *ngFor="let tempOrderHistory of orderHistory">
+                         
+                     <a routerLink="#" routerLinkActive="active-link" style="text-decoration: none; "> <td>{{tempOrderHistory.orderTrackingNumber}}</td></a>
+                         <td>{{tempOrderHistory.totalQuantity}}</td>
+                         <td>{{tempOrderHistory.totalPrice | currency : 'USD'}}</td>
+                         <td>{{tempOrderHistory.dateCreate | date : 'medium'}}</td>
+
+                    </tr>
+                </table>
+            </div>
+
+            <div *ngIf="orderHistory.length==0">
+                <div class="alert alert-warning col-md-12" role="alert" align="center">
+                   <p>No orders Available!!</p>
+                </div>
+            </div>
+
+        </div>
+    </div>

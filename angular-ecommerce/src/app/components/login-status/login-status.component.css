@@ -4,7 +4,7 @@
    change border to 10 px
 */
 
-.security-btn{
+/* .security-btn{
     position:relative;
     right:10px;
     min-width:85px;
@@ -14,6 +14,20 @@
     -moz-border-radius:3px;
     border-radius:0;
     background:#205b8d
+} */
+
+
+.security-btn{
+    position:relative;
+    right:0;
+    min-width:20px;
+    color:#fff;
+    border:1px solid #205b8d;
+    -webkit-border-radius:3px;
+    -moz-border-radius:3px;
+    border-radius:43px;
+    background:#205b8d;
+    min-height: 20px;
 }
 
 /*
@@ -35,9 +49,9 @@
 */
 
 .login-status-user-info {
-    line-height:43px;
+    line-height:20px;
     border:1px ;
-    padding:0 17px;
+    padding:20px 0px;
     -webkit-border-radius:3px;
     -moz-border-radius:3px;
     border-radius:3px;
